@@ -1,0 +1,39 @@
+---
+- name: Error handling
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: coping files
+      ansible.builtin.copy:
+        src: /home/ec2-user/a.txt #say file is already present
+        dest: /home/ec2-user/a.txt
+      ignore_errors: yes
+      register: copyoutput
+
+    - name: Display .stdout
+      debug:
+        var: copyoutput.stdout
+    
+    - name: Fail when Hi not in a.txt
+      command: "cat /home/ec2-user/a.txt"
+      register: aout
+      failed_when: "'Hi' not in aout.stdout"
+    
+    - name: Creating directory and using when
+      ansible.builtin.lineinfile:
+        path: "/home/ec2-user/a.txt"
+        line: "Hello Buddies!"
+      when: "'Hello Buddies!' not in lookup('file' , '/home/ec2-user/a.txt')"
+
+    - name: changes when
+      shell: "echo  'This is test'"
+      register: dirout
+      changed_when: "'test' not   in dirout.stdout"
+
+    # - name: Create directory and use changed_when
+    #   ansible.builtin.file:
+    #     path: /home/dir
+    #     state: directory
+    #   register: dirout
+    #   changed_when: "'Created' in dirout.msg"

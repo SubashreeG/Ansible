@@ -1,0 +1,14 @@
+---
+- name: Install apache
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: instaling apache
+      ansible.builtin.yum:
+        name: httpd
+        state: present 
+    - name: ensure if started
+      ansible.builtin.service:
+        name: httpd
+        state: started

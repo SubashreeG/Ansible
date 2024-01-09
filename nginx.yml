@@ -1,0 +1,21 @@
+#nginx install with handlers
+---
+- name: Installation of nginx
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install nginx
+      ansible.builtin.yum:
+        name: nginx
+        state: present
+    - name: Check if it's started
+      ansible.builtin.service:
+        name: nginx
+        state: started
+      notify: trigger restart
+  handlers:
+    - name: trigger restart
+      ansible.builtin.service:
+        name: nginx
+        state: restart

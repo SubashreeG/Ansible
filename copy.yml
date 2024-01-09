@@ -1,0 +1,13 @@
+---
+- name: copy files from control to remote
+  hosts: all
+  become: yes #sudo
+  
+  tasks:
+    - name: coping files
+      ansible.builtin.copy:
+        src: /home/ec2-user/a.txt
+        dest: /home/ec2-user/a.txt
+    
+   
+    
